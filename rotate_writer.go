@@ -9,6 +9,11 @@ import (
 	"time"
 )
 
+type FileRotateWriter interface {
+	Start() error
+	Write(p []byte) (int, error)
+}
+
 type RotatingLogWriter struct {
 	dirPath         string
 	fileBaseName    string

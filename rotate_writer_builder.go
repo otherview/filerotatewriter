@@ -4,7 +4,7 @@ import "fmt"
 
 type BuilderOptionsFunc func(*RotatingLogWriter) error
 
-func New(opts ...BuilderOptionsFunc) (*RotatingLogWriter, error) {
+func New(opts ...BuilderOptionsFunc) (FileRotateWriter, error) {
 	r := &RotatingLogWriter{
 		dirPath:         "",
 		fileBaseName:    "",

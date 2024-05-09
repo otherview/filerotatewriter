@@ -23,7 +23,7 @@ func TestNewRotatingLogWriter(t *testing.T) {
 
 	require.NoError(t, writer.Start())
 
-	createdFile := writer.currentFile.Name()
+	createdFile := writer.(*RotatingLogWriter).currentFile.Name()
 
 	// Use the rotating log writer with the standard log package
 	data := make([]byte, 1024*1024)
@@ -36,14 +36,23 @@ func TestNewRotatingLogWriter(t *testing.T) {
 	_, err = writer.Write(data)
 	assert.Nil(t, err)
 
-	assert.NotEqual(t, createdFile, writer.currentFile.Name())
+	assert.NotEqual(t, createdFile, writer.(*RotatingLogWriter).currentFile.Name())
 
 	// make sure the milliseconds dont colide
-	createdFile = writer.currentFile.Name()
+	createdFile = writer.(*RotatingLogWriter).currentFile.Name()
 	// Use the rotating log writer with the standard log package
 	rand.Read(data) //nolint: gosec,staticcheck
 	_, err = writer.Write(data)
 	assert.Nil(t, err)
 
-	assert.NotEqual(t, createdFile, writer.currentFile.Name())
+	assert.NotEqual(t, createdFile, writer.(*RotatingLogWriter).currentFile.Name())
+}
+
+func TestStdoutWriter(t *testing.T) {
+	writer := StdoutWriter()
+	data := make([]byte, 1024*1024)
+	rand.Read(data) //nolint: gosec,staticcheck
+	i, err := writer.Write(data)
+	assert.Nil(t, err)
+	assert.Equal(t, len(data), i)
 }
